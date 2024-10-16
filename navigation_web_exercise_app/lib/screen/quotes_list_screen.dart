@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:redirection_exercise/main.dart';
-import 'package:redirection_exercise/provider/auth_provider.dart';
 
 import '../model/quote.dart';
+import '../provider/auth_provider.dart';
 
 class QuotesListScreen extends StatelessWidget {
   final List<Quote> quotes;
@@ -35,6 +34,7 @@ class QuotesListScreen extends StatelessWidget {
             )
         ],
       ),
+      /// todo 18: add FAB and update the UI when button is tapped.
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
           final authRead = context.read<AuthProvider>();
@@ -42,9 +42,13 @@ class QuotesListScreen extends StatelessWidget {
           if (result) onLogout();
         },
         tooltip: "Logout",
+
+        
         child: authWatch.isLoadingLogout
-            ? CircularProgressIndicator()
-            : Icon(Icons.logout),
+            ? const CircularProgressIndicator(
+                color: Colors.white,
+              )
+            : const Icon(Icons.logout),
       ),
     );
   }
