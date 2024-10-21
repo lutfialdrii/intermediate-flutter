@@ -1,3 +1,4 @@
+import 'package:declarative_navigation/model/page_configuration.dart';
 import 'package:declarative_navigation/screen/register_screen.dart';
 import 'package:flutter/material.dart';
 
@@ -8,7 +9,7 @@ import '../screen/quote_detail_screen.dart';
 import '../screen/quotes_list_screen.dart';
 import '../screen/splash_screen.dart';
 
-class MyRouterDelegate extends RouterDelegate
+class MyRouterDelegate extends RouterDelegate<PageConfiguration>
     with ChangeNotifier, PopNavigatorRouterDelegateMixin {
   final GlobalKey<NavigatorState> _navigatorKey;
   final AuthRepository authRepository;
@@ -34,6 +35,7 @@ class MyRouterDelegate extends RouterDelegate
   List<Page> historyStack = [];
   bool? isLoggedIn;
   bool isRegister = false;
+  bool? isUnknown;
 
   @override
   Widget build(BuildContext context) {
@@ -66,8 +68,44 @@ class MyRouterDelegate extends RouterDelegate
   }
 
   @override
-  Future<void> setNewRoutePath(configuration) async {
-    /* Do Nothing */
+  Future<void> setNewRoutePath(PageConfiguration configuration) async {
+    if (configuration.isUnknownPage) {
+      isUnknown = true;
+      isRegister = false;
+    } else if (configuration.isRegisterPage) {
+      isRegister = true;
+    } else if (configuration.isHomePage ||
+        configuration.isLoginPage ||
+        configuration.isSplashPage) {
+      isUnknown = false;
+      selectedQuote = null;
+      isRegister = false;
+    } else if (configuration.isDetailPage) {
+      isUnknown = false;
+      isRegister = false;
+      selectedQuote = configuration.quoteId.toString();
+    } else {
+      print('Couldnt set new route path');
+    }
+    notifyListeners();
+  }
+
+  PageConfiguration? get currentConfiguration {
+    if (isLoggedIn == null) {
+      return PageConfiguration.splash();
+    } else if (isRegister == true) {
+      return PageConfiguration.register();
+    } else if (isLoggedIn == false) {
+      return PageConfiguration.login();
+    } else if (isUnknown == true) {
+      return PageConfiguration.unknown();
+    } else if (selectedQuote == null) {
+      return PageConfiguration.home();
+    } else if (selectedQuote != null) {
+      return PageConfiguration.detailQuote(selectedQuote!);
+    } else {
+      return null;
+    }
   }
 
   /// todo 12: add these variable to support history stack
