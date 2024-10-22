@@ -1,4 +1,8 @@
+import 'dart:io';
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
 import '../provider/home_provider.dart';
@@ -68,13 +72,54 @@ class _HomePageState extends State<HomePage> {
 
   _onUpload() async {}
 
-  _onGalleryView() async {}
+  _onGalleryView() async {
+    // Agar fungsi tidak berjalan pada macos dan linux dikarenakan belum adanya package yang support
+    final isMacOS = defaultTargetPlatform == TargetPlatform.macOS;
+    final isLinux = defaultTargetPlatform == TargetPlatform.linux;
+    if (isMacOS || isLinux) return;
+    final provider = context.read<HomeProvider>();
+    final ImagePicker picker = ImagePicker();
 
-  _onCameraView() async {}
+    final XFile? pickedFile = await picker.pickImage(
+      source: ImageSource.gallery,
+    );
+
+    if (pickedFile != null) {
+      print(pickedFile.path);
+      provider.setImageFile(pickedFile);
+      provider.setImagePath(pickedFile.path);
+    }
+  }
+
+  _onCameraView() async {
+    // Agar fungsi tidak berjalan pada selain mobile
+    final isAndroid = defaultTargetPlatform == TargetPlatform.android;
+    final isiOS = defaultTargetPlatform == TargetPlatform.iOS;
+    final isNotMobile = !(isAndroid || isiOS);
+    if (isNotMobile) return;
+
+    final provider = context.read<HomeProvider>();
+    final ImagePicker picker = ImagePicker();
+    final XFile? pickedFile = await picker.pickImage(
+      source: ImageSource.camera,
+    );
+
+    if (pickedFile != null) {
+      print(pickedFile.path);
+      provider.setImageFile(pickedFile);
+      provider.setImagePath(pickedFile.path);
+    }
+  }
 
   _onCustomCameraView() async {}
 
   Widget _showImage() {
-    return Container();
+    final imagePath = context.read<HomeProvider>().imagePath;
+    return kIsWeb
+        ? Image.network(imagePath.toString(), fit: BoxFit.contain)
+        : Image.file(
+            File(imagePath.toString()),
+            fit: BoxFit.contain,
+          );
   }
 }
