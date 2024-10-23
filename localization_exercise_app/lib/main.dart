@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:localization_app/common/common.dart';
+import 'package:localization_app/provider/localization_provider.dart';
+import 'package:provider/provider.dart';
 
 import 'home.dart';
 
@@ -12,24 +14,30 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Localization & Accessibility',
-      localizationsDelegates: AppLocalizations.localizationsDelegates,
-      supportedLocales: AppLocalizations.supportedLocales,
-      theme: ThemeData(
-        appBarTheme: const AppBarTheme(
-          backgroundColor: Colors.white,
-          foregroundColor: Colors.black,
-        ),
-        scaffoldBackgroundColor: Colors.grey.shade50,
-        outlinedButtonTheme: OutlinedButtonThemeData(
-          style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.blueGrey.shade800,
-            foregroundColor: Colors.white,
-          ),
-        ),
-      ),
-      home: const HomePage(),
-    );
+    return ChangeNotifierProvider<LocalizationProvider>(
+        create: (context) => LocalizationProvider(),
+        builder: (context, child) {
+          final provider = Provider.of<LocalizationProvider>(context);
+          return MaterialApp(
+            locale: provider.locale,
+            title: 'Flutter Localization & Accessibility',
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
+            theme: ThemeData(
+              appBarTheme: const AppBarTheme(
+                backgroundColor: Colors.white,
+                foregroundColor: Colors.black,
+              ),
+              scaffoldBackgroundColor: Colors.grey.shade50,
+              outlinedButtonTheme: OutlinedButtonThemeData(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.blueGrey.shade800,
+                  foregroundColor: Colors.white,
+                ),
+              ),
+            ),
+            home: const HomePage(),
+          );
+        });
   }
 }

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 import 'content/benefit_widget.dart';
 import 'content/header_widget.dart';
+import 'widget/flag_icon_widget.dart';
 import 'widget/max_width_widget.dart';
 import 'widget/packet_list.dart';
 
@@ -19,10 +20,7 @@ class HomePage extends StatelessWidget {
         ),
         title: const Text("Dicoding Academy"),
         actions: [
-          IconButton(
-            onPressed: () {},
-            icon: const Icon(Icons.flag),
-          ),
+          const FlagIconWidget(),
           IconButton(
             onPressed: () {
               AppSettings.openAppSettings();
