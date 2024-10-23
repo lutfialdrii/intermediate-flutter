@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:localization_app/common/common.dart';
 
 class CostWidget extends StatelessWidget {
   const CostWidget({Key? key}) : super(key: key);
@@ -10,7 +11,7 @@ class CostWidget extends StatelessWidget {
       child: Column(
         children: [
           Text(
-            "Biaya Langganan",
+            AppLocalizations.of(context)!.costTitle,
             style: Theme.of(context).textTheme.headlineSmall,
             softWrap: true,
             overflow: TextOverflow.fade,
@@ -18,7 +19,7 @@ class CostWidget extends StatelessWidget {
           ),
           const SizedBox(height: 10),
           Text(
-            "Pilih paket langganan sebagai invertasi belajar yang sesuai dengan kebutuhan Anda.",
+            AppLocalizations.of(context)!.costSubtitle,
             style: Theme.of(context).textTheme.bodySmall,
             softWrap: true,
             overflow: TextOverflow.fade,

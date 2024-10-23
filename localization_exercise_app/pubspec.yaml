@@ -9,18 +9,21 @@ environment:
   sdk: ">=2.15.0 <3.0.0"
 
 dependencies:
+  app_settings: ^5.1.1
+  cupertino_icons: ^1.0.2
   flutter:
     sdk: flutter
-
-  cupertino_icons: ^1.0.2
+  flutter_localizations:
+    sdk: flutter
+  intl: ^0.19.0
 
 dev_dependencies:
+  flutter_lints: null
   flutter_test:
     sdk: flutter
-
-  flutter_lints:
 
 flutter:
   uses-material-design: true
   assets:
     - assets/dicoding-academy.png
+  generate: true

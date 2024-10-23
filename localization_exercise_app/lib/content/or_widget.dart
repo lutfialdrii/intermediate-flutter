@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:localization_app/common/common.dart';
 
 class OrWidget extends StatelessWidget {
   const OrWidget({Key? key}) : super(key: key);
@@ -9,7 +10,7 @@ class OrWidget extends StatelessWidget {
       padding: const EdgeInsets.all(8.0),
       alignment: Alignment.center,
       child: Text(
-        "atau",
+        AppLocalizations.of(context)!.orText,
         textAlign: TextAlign.center,
       ),
     );
