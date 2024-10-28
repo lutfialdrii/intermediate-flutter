@@ -13,8 +13,9 @@ class StoryKuyApp extends StatelessWidget {
     return MaterialApp(
       title: 'StoryKuy',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.green),
         useMaterial3: true,
+        scaffoldBackgroundColor: Colors.white
       ),
       home: const SplashScreenPage(),
     );

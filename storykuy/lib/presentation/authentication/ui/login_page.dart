@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:storykuy/gen/assets.gen.dart';
+import 'package:storykuy/presentation/authentication/widgets/password_text_field.dart';
 
 class LoginPage extends StatelessWidget {
   const LoginPage({super.key});
@@ -14,7 +15,7 @@ class LoginPage extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Assets.ilustrationLight.image(),
-              Text(
+              const Text(
                 "Email",
                 style: TextStyle(
                     fontSize: 15,
@@ -22,15 +23,17 @@ class LoginPage extends StatelessWidget {
                     color: Colors.green),
               ),
               TextField(
+                keyboardType: TextInputType.emailAddress,
                 decoration: InputDecoration(
                   focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(
+                    borderSide: const BorderSide(
                       width: 1.5,
                       color: Colors.green,
                     ),
+                    borderRadius: BorderRadius.circular(8),
                   ),
                   hintText: "Masukkan Email",
-                  hintStyle: TextStyle(color: Colors.black45),
+                  hintStyle: const TextStyle(color: Colors.black45),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(8),
                   ),
@@ -40,33 +43,35 @@ class LoginPage extends StatelessWidget {
                   FocusScope.of(context).unfocus();
                 },
               ),
-              SizedBox(
-                height: 8,
+              const SizedBox(
+                height: 12,
               ),
-              Text("Password"),
-              TextField(
-                obscureText: true,
-                decoration: InputDecoration(
-                  labelText: "Password",
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  // label: Text("Password"),
-                ),
+              const Text(
+                "Password",
+                style: TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.w700,
+                    color: Colors.green),
               ),
-              SizedBox(
-                height: 16,
+              PasswordTextField(),
+              const SizedBox(
+                height: 24,
               ),
               Container(
                 width: double.infinity,
-                child: OutlinedButton(
-                  style: OutlinedButton.styleFrom(
-                      side: BorderSide(color: Colors.green),
-                      foregroundColor: Colors.green,
-                      shape: RoundedRectangleBorder(
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.green,
+                      shape: const RoundedRectangleBorder(
                           borderRadius: BorderRadius.all(Radius.circular(8)))),
                   onPressed: () {},
-                  child: Text("Login"),
+                  child: Padding(
+                    padding: const EdgeInsets.all(12.0),
+                    child: const Text(
+                      "Login",
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ),
                 ),
               )
             ],
