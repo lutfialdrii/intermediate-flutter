@@ -8,7 +8,7 @@
 PRODUCT_NAME = storykuy
 
 // The application's bundle identifier
-PRODUCT_BUNDLE_IDENTIFIER = com.lutfialdri.storykuy
+PRODUCT_BUNDLE_IDENTIFIER = com.lutfi.storykuy
 
 // The copyright displayed in application information
-PRODUCT_COPYRIGHT = Copyright © 2024 com.lutfialdri. All rights reserved.
+PRODUCT_COPYRIGHT = Copyright © 2024 com.lutfi. All rights reserved.

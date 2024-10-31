@@ -1,4 +1,4 @@
-package com.lutfialdri.storykuy
+package com.lutfi.storykuy
 
 import io.flutter.embedding.android.FlutterActivity
 
