@@ -10,6 +10,9 @@ class AuthProvider extends ChangeNotifier {
   ResultState _loginState = ResultState.initial;
   ResultState get loginState => _loginState;
 
+  ResultState _logoutState = ResultState.initial;
+  ResultState get logoutState => _logoutState;
+
   String _message = "";
   String get message => _message;
 
@@ -30,6 +33,22 @@ class AuthProvider extends ChangeNotifier {
       _loginState = ResultState.error;
       notifyListeners();
       _message = "Gagal terhubung dengan server!";
+    }
+  }
+
+  Future<void> logout() async {
+    _logoutState = ResultState.loading;
+    notifyListeners();
+
+    final status = await authRepository.clearSession();
+    if (status) {
+      _logoutState = ResultState.loaded;
+      notifyListeners();
+      _message = "Logout Berhasil";
+    } else {
+      _logoutState = ResultState.error;
+      notifyListeners();
+      _message = "Terjadi Kesalahan";
     }
   }
 }

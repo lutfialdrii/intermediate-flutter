@@ -70,14 +70,13 @@ class MyRouterDelegate extends RouterDelegate
   List<Page> get _loggedInStack => [
         MaterialPage(
           key: const ValueKey("HomePage"),
-          // child: QuotesListScreen(
-          //   quotes: quotes,
-          //   onTapped: (String quoteId) {
-          //     selectedQuote = quoteId;
-          //     notifyListeners();
-          //   },
-          // ),
-          child: HomeScreen(),
+          child: HomeScreen(
+            onTapped: (String storyId) {},
+            onLogout: () {
+              isLoggedIn = false;
+              notifyListeners();
+            },
+          ),
         ),
         if (selectedStory != null)
           MaterialPage(

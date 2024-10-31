@@ -6,7 +6,7 @@ import 'package:storykuy/data/model/login_response.dart';
 
 class AuthRepository {
   final DioService dioService;
-  final String sessionKey = 'sessionKey';
+  static const String sessionKey = 'sessionKey';
 
   AuthRepository({required this.dioService});
 
@@ -38,7 +38,16 @@ class AuthRepository {
     try {
       return await preferences.setString(sessionKey, jsonEncode(response));
     } catch (e) {
-      rethrow;
+      return false;
+    }
+  }
+
+  Future<bool> clearSession() async {
+    final preferences = await SharedPreferences.getInstance();
+    try {
+      return await preferences.remove(sessionKey);
+    } catch (e) {
+      return false;
     }
   }
 

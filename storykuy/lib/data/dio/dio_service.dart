@@ -1,7 +1,10 @@
 import 'dart:convert';
 
 import 'package:dio/dio.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:storykuy/data/model/get_all_stories_response.dart';
 import 'package:storykuy/data/model/login_response.dart';
+import 'package:storykuy/data/repository/auth_repository.dart';
 
 class DioService {
   static const String baseUrl = 'https://story-api.dicoding.dev/v1';
@@ -22,11 +25,25 @@ class DioService {
     }
   }
 
-  // Register
+  Future<GetAllStoriesResponse> fetchAllStories() async {
+    final pref = await SharedPreferences.getInstance();
+    final session = pref.getString(AuthRepository.sessionKey);
+    final token = LoginResponse.fromJson(jsonDecode(session!)).loginResult!.token;
+    final dio = Dio(BaseOptions(headers: {"Authorization": "Bearer $token"}));
 
-  // Upload Story
+    final response = await dio.get('$baseUrl/stories');
+    if (response.statusCode == 200) {
+      return GetAllStoriesResponse.fromJson(response.data);
+    } else {
+      throw Exception('Gagal Mendapatkan Data : ${response.data['message']}');
+    }
 
-  // Get Story
+    // Register
 
-  // logout
+    // Upload Story
+
+    // Get Story
+
+    // logout
+  }
 }
