@@ -48,7 +48,7 @@ class _StorykuyAppState extends State<StorykuyApp> {
       child: MaterialApp(
         title: 'StoryKuy',
         theme: ThemeData(
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+          colorScheme: ColorScheme.fromSeed(seedColor: Colors.green),
           useMaterial3: true,
         ),
         home: Router(

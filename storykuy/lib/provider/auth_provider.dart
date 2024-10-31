@@ -10,6 +10,9 @@ class AuthProvider extends ChangeNotifier {
   ResultState _loginState = ResultState.initial;
   ResultState get loginState => _loginState;
 
+  ResultState _registerState = ResultState.initial;
+  ResultState get registerState => _registerState;
+
   ResultState _logoutState = ResultState.initial;
   ResultState get logoutState => _logoutState;
 
@@ -20,35 +23,62 @@ class AuthProvider extends ChangeNotifier {
     _loginState = ResultState.loading;
     notifyListeners();
 
-    final response = await authRepository.login(email, password);
-    if (response.loginResult != null && !response.error!) {
-      _message = response.message!;
-      _loginState = ResultState.loaded;
-      notifyListeners();
-    } else if (response.error! && response.message != null) {
-      _message = response.message!;
+    try {
+      final response = await authRepository.login(email, password);
+      if (response.loginResult != null && !response.error!) {
+        _message = response.message!;
+        _loginState = ResultState.loaded;
+      } else if (response.error! && response.message != null) {
+        _message = response.message!;
+        _loginState = ResultState.error;
+      } else {
+        _loginState = ResultState.error;
+        _message = "Gagal terhubung dengan server!";
+      }
+    } catch (e) {
       _loginState = ResultState.error;
-      notifyListeners();
-    } else {
-      _loginState = ResultState.error;
-      notifyListeners();
-      _message = "Gagal terhubung dengan server!";
+      _message = e.toString(); // Simpan pesan error dari Exception
     }
+    notifyListeners();
+  }
+
+  Future<void> register(String email, String password) async {
+    _registerState = ResultState.loading;
+    notifyListeners();
+
+    try {
+      final response = await authRepository.register(email, password);
+      if (!response.error!) {
+        _registerState = ResultState.loaded;
+        _message = response.message!;
+      } else {
+        _registerState = ResultState.error;
+        _message = response.message ?? "Terjadi Kesalahan!";
+      }
+    } catch (e) {
+      _registerState = ResultState.error;
+      _message = e.toString();
+    }
+    notifyListeners();
   }
 
   Future<void> logout() async {
     _logoutState = ResultState.loading;
     notifyListeners();
 
-    final status = await authRepository.clearSession();
-    if (status) {
-      _logoutState = ResultState.loaded;
-      notifyListeners();
-      _message = "Logout Berhasil";
-    } else {
+    try {
+      final status = await authRepository.clearSession();
+      if (status) {
+        _logoutState = ResultState.loaded;
+        _message = "Logout Berhasil";
+      } else {
+        _logoutState = ResultState.error;
+        _message = "Terjadi Kesalahan";
+      }
+    } catch (e) {
       _logoutState = ResultState.error;
-      notifyListeners();
-      _message = "Terjadi Kesalahan";
+      _message = e.toString();
     }
+    notifyListeners();
   }
 }

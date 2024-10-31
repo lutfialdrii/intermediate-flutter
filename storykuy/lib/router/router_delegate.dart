@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:storykuy/data/model/get_all_stories_response.dart';
 import 'package:storykuy/data/repository/auth_repository.dart';
 import 'package:storykuy/ui/screens/add_story_screen.dart';
 import 'package:storykuy/ui/screens/home_screen.dart';
@@ -22,7 +23,7 @@ class MyRouterDelegate extends RouterDelegate
   List<Page> historyStack = [];
   bool? isLoggedIn;
   bool isRegister = false;
-  String? selectedStory;
+  Story? selectedStory;
   bool addStory = false;
 
   _init() async {
@@ -71,7 +72,10 @@ class MyRouterDelegate extends RouterDelegate
         MaterialPage(
           key: const ValueKey("HomePage"),
           child: HomeScreen(
-            onTapped: (String storyId) {},
+            onTapped: (Story story) {
+              selectedStory = story;
+              notifyListeners();
+            },
             onLogout: () {
               isLoggedIn = false;
               notifyListeners();
@@ -81,7 +85,7 @@ class MyRouterDelegate extends RouterDelegate
         if (selectedStory != null)
           MaterialPage(
             key: ValueKey(selectedStory),
-            child: StoryDetailScreen(),
+            child: StoryDetailScreen(story: selectedStory!),
           ),
         if (addStory == true)
           MaterialPage(

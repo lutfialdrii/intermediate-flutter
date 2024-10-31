@@ -1,7 +1,10 @@
 import 'dart:convert';
 
+import 'package:dio/dio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:storykuy/common/handle_dio.dart';
 import 'package:storykuy/data/dio/dio_service.dart';
+import 'package:storykuy/data/model/general_response.dart';
 import 'package:storykuy/data/model/login_response.dart';
 
 class AuthRepository {
@@ -19,8 +22,20 @@ class AuthRepository {
       } else {
         return response;
       }
+    } on DioException catch (e) {
+      // Tangani DioException
+      throw handleDioError(e);
+    } 
+  }
+
+  Future<GeneralResponse> register(String email, String password) async {
+    try {
+      final response = await dioService.register(email, password);
+      return response;
+    } on DioException catch (e) {
+      throw handleDioError(e);
     } catch (e) {
-      rethrow;
+      throw "Terjadi kesalahan yang tidak terduga.";
     }
   }
 
