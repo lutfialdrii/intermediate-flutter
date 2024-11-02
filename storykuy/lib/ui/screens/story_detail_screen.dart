@@ -73,27 +73,6 @@ class StoryDetailScreen extends StatelessWidget {
                         textAlign: TextAlign.justify,
                       ),
                       const SizedBox(height: 24),
-                      // Tombol
-                      Center(
-                        child: ElevatedButton.icon(
-                          onPressed: () {
-                            // Logika aksi tombol
-                            print('Tombol dibuka');
-                          },
-                          icon: const Icon(Icons.share),
-                          label: const Text('Bagikan Story'),
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.green,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            padding: const EdgeInsets.symmetric(
-                              vertical: 12,
-                              horizontal: 20,
-                            ),
-                          ),
-                        ),
-                      ),
                     ],
                   ),
                 ),

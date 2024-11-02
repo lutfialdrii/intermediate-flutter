@@ -54,13 +54,11 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                     borderRadius: BorderRadius.circular(8),
                   ),
-
                   hintText: "Masukkan Email",
                   hintStyle: const TextStyle(color: Colors.black45),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(8),
                   ),
-                  // label: Text("Email"),
                 ),
                 onTapOutside: (event) {
                   FocusScope.of(context).unfocus();
@@ -139,9 +137,9 @@ class _LoginScreenState extends State<LoginScreen> {
                     },
                     style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.green,
-                        shape: RoundedRectangleBorder(
+                        shape: const RoundedRectangleBorder(
                             borderRadius:
-                                BorderRadius.all(Radius.circular(8)))),
+                                BorderRadius.all(const Radius.circular(8)))),
                     child: const Padding(
                       padding: EdgeInsets.all(16.0),
                       child: Text(

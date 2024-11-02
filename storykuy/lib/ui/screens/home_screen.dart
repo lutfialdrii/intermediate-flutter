@@ -10,8 +10,14 @@ import '../widgets/card_story.dart';
 class HomeScreen extends StatelessWidget {
   final Function() onLogout;
   final Function(Story) onTapped;
+  final Function() onGoToAddScreen;
 
-  const HomeScreen({super.key, required this.onLogout, required this.onTapped});
+  const HomeScreen({
+    super.key,
+    required this.onLogout,
+    required this.onTapped,
+    required this.onGoToAddScreen,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -51,15 +57,16 @@ class HomeScreen extends StatelessWidget {
         ],
       ),
       body: Padding(
-        padding: EdgeInsets.all(8),
+        padding: const EdgeInsets.all(8),
         child: Stack(
           children: [
             Consumer<HomeProvider>(
               builder: (context, provider, child) {
                 if (provider.stories.isNotEmpty) {
-                  return _buildList(provider);
-                } else if (provider.stories.isEmpty) {
-                  return Center(
+                  return _buildList(provider.stories);
+                } else if (provider.stories.isEmpty &&
+                    provider.state == ResultState.loaded) {
+                  return const Center(
                     child: Text("Saat ini tidak ada story yang dibagikan :("),
                   );
                 }
@@ -68,12 +75,8 @@ class HomeScreen extends StatelessWidget {
                   return Center(
                     child: Text(provider.message),
                   );
-                } else {
-                  return Center(
-                    child: Text(
-                        "Terjadi kesalahan, periksa koneksi internet anda!"),
-                  );
                 }
+                return const SizedBox();
               },
             ),
             if (authWatch.logoutState == ResultState.loading ||
@@ -81,7 +84,7 @@ class HomeScreen extends StatelessWidget {
               Container(
                 width: double.infinity,
                 height: double.infinity,
-                color: Colors.black.withOpacity(0.3),
+                color: Colors.black.withOpacity(0.1),
                 child: const Center(
                   child: CircularProgressIndicator(),
                 ),
@@ -89,15 +92,21 @@ class HomeScreen extends StatelessWidget {
           ],
         ),
       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          onGoToAddScreen();
+        },
+        child: const Icon(Icons.add),
+      ),
     );
   }
 
-  ListView _buildList(HomeProvider provider) {
+  ListView _buildList(List<Story> stories) {
     return ListView.builder(
       padding: const EdgeInsets.all(8.0),
-      itemCount: provider.stories.length,
+      itemCount: stories.length,
       itemBuilder: (context, index) {
-        final story = provider.stories[index];
+        final story = stories[index];
         return CardStory(onTapped: onTapped, story: story);
       },
     );

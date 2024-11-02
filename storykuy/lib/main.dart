@@ -6,8 +6,6 @@ import 'package:storykuy/data/repository/story_repository.dart';
 import 'package:storykuy/provider/auth_provider.dart';
 import 'package:storykuy/provider/home_provider.dart';
 import 'package:storykuy/router/router_delegate.dart';
-import 'package:storykuy/ui/screens/login_screen.dart';
-import 'package:storykuy/ui/screens/splash_screen.dart';
 
 void main() {
   runApp(const StorykuyApp());

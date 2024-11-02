@@ -13,7 +13,6 @@ class DioService {
   DioService() : _dio = Dio(BaseOptions(baseUrl: baseUrl)) {
     _dio.interceptors.add(InterceptorsWrapper(
       onRequest: (options, handler) async {
-        // Tambahkan token ke header Authorization jika tersedia
         final token = await _getToken();
         if (token != null) {
           options.headers["Authorization"] = "Bearer $token";
@@ -21,13 +20,11 @@ class DioService {
         return handler.next(options);
       },
       onError: (DioException error, handler) {
-        // Tangani kesalahan
         handler.next(error);
       },
     ));
   }
 
-  // Fungsi untuk mendapatkan token dari SharedPreferences
   Future<String?> _getToken() async {
     final pref = await SharedPreferences.getInstance();
     final session = pref.getString(AuthRepository.sessionKey);
@@ -38,7 +35,6 @@ class DioService {
     return null;
   }
 
-  // Fungsi umum untuk menangani error
   Exception _handleError(DioException error) {
     if (error.response != null && error.response!.data is Map) {
       final message = error.response!.data['message'] ?? 'Terjadi kesalahan';
@@ -75,6 +71,31 @@ class DioService {
     try {
       final response = await _dio.get('/stories');
       return GetAllStoriesResponse.fromJson(response.data);
+    } on DioException catch (e) {
+      throw _handleError(e);
+    }
+  }
+
+  Future<GeneralResponse> uploadStory(
+    List<int> bytes,
+    String fileName,
+    String description,
+  ) async {
+    try {
+      final multiPartFile = MultipartFile.fromBytes(bytes,
+          filename: fileName, contentType: DioMediaType.parse('image/jpeg'));
+      FormData formData = FormData.fromMap({
+        "description": description,
+        "photo": multiPartFile,
+      });
+      final response = await _dio.post(
+        '/stories',
+        data: formData,
+        options: Options(
+          headers: {"Content-Type": "multipart/form-data"},
+        ),
+      );
+      return GeneralResponse.fromJson(response.data);
     } on DioException catch (e) {
       throw _handleError(e);
     }

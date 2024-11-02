@@ -80,6 +80,10 @@ class MyRouterDelegate extends RouterDelegate
               isLoggedIn = false;
               notifyListeners();
             },
+            onGoToAddScreen: () {
+              addStory = true;
+              notifyListeners();
+            },
           ),
         ),
         if (selectedStory != null)
@@ -89,8 +93,13 @@ class MyRouterDelegate extends RouterDelegate
           ),
         if (addStory == true)
           MaterialPage(
-            key: ValueKey("AddStory"),
-            child: AddStoryScreen(),
+            key: const ValueKey("AddStory"),
+            child: AddStoryScreen(
+              goBackToHome: () {
+                addStory = false;
+                notifyListeners();
+              },
+            ),
           ),
       ];
 
@@ -114,6 +123,7 @@ class MyRouterDelegate extends RouterDelegate
 
         isRegister = false;
         selectedStory = null;
+        addStory = false;
         notifyListeners();
 
         return true;
