@@ -1,0 +1,18 @@
+{
+    "generalError": "Something went wrong!",
+    "emptyStory": "There are currently no stories to share :(",
+    "logout": "Logout",
+    "hintEmail": "Enter a Email",
+    "hintPassword": "Enter a Password",
+    "errorEmail": "Email is required",
+    "errorPassword": "Password is required",
+    "errorDesc": "Description is required",
+    "errorImage": "Add an image!",
+    "registerLogin": "Don't have an account?",
+    "loginRegister": "Already have an account?",
+    "camera": "Camera",
+    "gallery": "Gallery",
+    "desc": "Description",
+    "changeLanguage": "Language",
+    "settings": "Settings"
+}

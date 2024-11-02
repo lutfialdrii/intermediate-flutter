@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:storykuy/common/result_state.dart';
-
+import 'package:storykuy/common/common.dart';
 import 'package:storykuy/provider/home_provider.dart';
 
 class AddStoryScreen extends StatefulWidget {
@@ -71,11 +71,12 @@ class _AddStoryScreenState extends State<AddStoryScreen> {
                           shape: const RoundedRectangleBorder(
                               borderRadius:
                                   BorderRadius.all(Radius.circular(8)))),
-                      child: const Padding(
-                        padding: EdgeInsets.all(16.0),
+                      child: Padding(
+                        padding: const EdgeInsets.all(16.0),
                         child: Text(
-                          "Camera",
-                          style: TextStyle(fontSize: 16, color: Colors.white),
+                          AppLocalizations.of(context)!.camera,
+                          style: const TextStyle(
+                              fontSize: 16, color: Colors.white),
                         ),
                       ),
                     ),
@@ -93,11 +94,12 @@ class _AddStoryScreenState extends State<AddStoryScreen> {
                           shape: const RoundedRectangleBorder(
                               borderRadius:
                                   BorderRadius.all(Radius.circular(8)))),
-                      child: const Padding(
-                        padding: EdgeInsets.all(16.0),
+                      child: Padding(
+                        padding: const EdgeInsets.all(16.0),
                         child: Text(
-                          "Gallery",
-                          style: TextStyle(fontSize: 16, color: Colors.white),
+                          AppLocalizations.of(context)!.gallery,
+                          style: const TextStyle(
+                              fontSize: 16, color: Colors.white),
                         ),
                       ),
                     ),
@@ -112,7 +114,7 @@ class _AddStoryScreenState extends State<AddStoryScreen> {
                 keyboardType: TextInputType.text,
                 controller: descriptionController,
                 decoration: InputDecoration(
-                  hintText: "Deskripsi",
+                  hintText: AppLocalizations.of(context)!.desc,
                   focusedBorder: OutlineInputBorder(
                     borderSide: const BorderSide(
                       width: 1.5,
@@ -128,9 +130,9 @@ class _AddStoryScreenState extends State<AddStoryScreen> {
               ),
               Visibility(
                 visible: isDescError,
-                child: const Text(
-                  "Deskripsi harus diisi!",
-                  style: TextStyle(fontSize: 10, color: Colors.red),
+                child: Text(
+                  AppLocalizations.of(context)!.errorDesc,
+                  style: const TextStyle(fontSize: 10, color: Colors.red),
                 ),
               ),
               Container(
@@ -140,9 +142,10 @@ class _AddStoryScreenState extends State<AddStoryScreen> {
                   onPressed: () async {
                     if (context.read<HomeProvider>().imagePath == null) {
                       ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
+                        SnackBar(
                           backgroundColor: Colors.red,
-                          content: Text("Tambahkan gambar!"),
+                          content:
+                              Text(AppLocalizations.of(context)!.errorImage),
                         ),
                       );
                     } else if (descriptionController.text.isEmpty) {
@@ -157,12 +160,15 @@ class _AddStoryScreenState extends State<AddStoryScreen> {
                       backgroundColor: Colors.green,
                       shape: const RoundedRectangleBorder(
                           borderRadius: BorderRadius.all(Radius.circular(8)))),
-                  child: const Padding(
-                    padding: EdgeInsets.all(16.0),
-                    child: Text(
-                      "UPLOAD",
-                      style: TextStyle(fontSize: 16, color: Colors.white),
-                    ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: context.watch<HomeProvider>().uploadState ==
+                            ResultState.loading
+                        ? const CircularProgressIndicator()
+                        : const Text(
+                            "UPLOAD",
+                            style: TextStyle(fontSize: 16, color: Colors.white),
+                          ),
                   ),
                 ),
               ),

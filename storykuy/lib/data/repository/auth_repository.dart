@@ -25,7 +25,7 @@ class AuthRepository {
     } on DioException catch (e) {
       // Tangani DioException
       throw handleDioError(e);
-    } 
+    }
   }
 
   Future<GeneralResponse> register(String email, String password) async {
@@ -35,7 +35,7 @@ class AuthRepository {
     } on DioException catch (e) {
       throw handleDioError(e);
     } catch (e) {
-      throw "Terjadi kesalahan yang tidak terduga.";
+      throw "Something went wrong! yang tidak terduga.";
     }
   }
 

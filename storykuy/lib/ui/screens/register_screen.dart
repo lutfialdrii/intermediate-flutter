@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:storykuy/common/result_state.dart';
 
+import '../../common/common.dart';
 import '../../provider/auth_provider.dart';
 import '../widgets/password_text_field.dart';
 
@@ -55,12 +56,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     borderRadius: BorderRadius.circular(8),
                   ),
 
-                  hintText: "Masukkan Email",
+                  hintText: AppLocalizations.of(context)!.hintEmail,
                   hintStyle: const TextStyle(color: Colors.black45),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(8),
                   ),
-                  // label: Text("Email"),
                 ),
                 onTapOutside: (event) {
                   FocusScope.of(context).unfocus();
@@ -68,9 +68,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
               ),
               Visibility(
                 visible: isEmailError,
-                child: const Text(
-                  "Email harus diisi",
-                  style: TextStyle(fontSize: 10, color: Colors.red),
+                child: Text(
+                  AppLocalizations.of(context)!.errorEmail,
+                  style: const TextStyle(fontSize: 10, color: Colors.red),
                 ),
               ),
               const SizedBox(
@@ -88,9 +88,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
               ),
               Visibility(
                 visible: isPasswordError,
-                child: const Text(
-                  "Password harus diisi",
-                  style: TextStyle(fontSize: 10, color: Colors.red),
+                child: Text(
+                  AppLocalizations.of(context)!.errorPassword,
+                  style: const TextStyle(fontSize: 10, color: Colors.red),
                 ),
               ),
               const SizedBox(
@@ -169,16 +169,16 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   alignment: Alignment.center,
                   child: RichText(
                     textAlign: TextAlign.center,
-                    text: const TextSpan(
+                    text: TextSpan(
                       children: [
                         TextSpan(
-                          text: "Sudah punya akun? ",
-                          style: TextStyle(
+                          text: AppLocalizations.of(context)!.loginRegister,
+                          style: const TextStyle(
                             color: Colors.black,
                           ),
                         ),
-                        TextSpan(
-                          text: "Login",
+                        const TextSpan(
+                          text: " Login",
                           style: TextStyle(
                             color: Colors.green,
                           ),

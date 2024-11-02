@@ -1,0 +1,18 @@
+{
+    "generalError": "Something went wrong!",
+    "emptyStory": "Saat ini tidak ada story yang dibagikan :(",
+    "logout": "Keluar",
+    "hintEmail": "Masukkan Email",
+    "hintPassword": "Masukkan Password",
+    "errorEmail": "Email harus diisi!",
+    "errorPassword": "Password harus diisi!",
+    "errorDesc": "Deskripsi harus diisi!",
+    "errorImage": "Tambahkan gambar!",
+    "registerLogin": "Belum punya akun?",
+    "loginRegister": "Sudah punya akun?",
+    "camera": "Kamera",
+    "gallery": "Gallery",
+    "desc": "Deskripsi",
+    "changeLanguage": "Bahasa",
+    "settings": "Pengaturan"
+}

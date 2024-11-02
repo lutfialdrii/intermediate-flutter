@@ -1,9 +1,12 @@
+import 'dart:io';
+import 'package:android_intent_plus/android_intent.dart';
+import 'package:android_intent_plus/flag.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:storykuy/common/result_state.dart';
 import 'package:storykuy/data/model/get_all_stories_response.dart';
 import 'package:storykuy/provider/home_provider.dart';
-
+import '../../common/common.dart';
 import '../../provider/auth_provider.dart';
 import '../widgets/card_story.dart';
 
@@ -39,7 +42,16 @@ class HomeScreen extends StatelessWidget {
             );
           }
         case 1:
-          break;
+          if (Platform.isAndroid) {
+            openLanguageSettings();
+          } else {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content:
+                    Text('Language settings are only available on Android.'),
+              ),
+            );
+          }
       }
     }
 
@@ -50,8 +62,11 @@ class HomeScreen extends StatelessWidget {
           PopupMenuButton<int>(
             onSelected: (item) => handleClick(item),
             itemBuilder: (context) => [
-              const PopupMenuItem<int>(value: 0, child: Text('Logout')),
-              const PopupMenuItem<int>(value: 1, child: Text('Settings')),
+              PopupMenuItem<int>(
+                  value: 0, child: Text(AppLocalizations.of(context)!.logout)),
+              PopupMenuItem<int>(
+                  value: 1,
+                  child: Text(AppLocalizations.of(context)!.changeLanguage)),
             ],
           ),
         ],
@@ -66,8 +81,8 @@ class HomeScreen extends StatelessWidget {
                   return _buildList(provider.stories);
                 } else if (provider.stories.isEmpty &&
                     provider.state == ResultState.loaded) {
-                  return const Center(
-                    child: Text("Saat ini tidak ada story yang dibagikan :("),
+                  return Center(
+                    child: Text(AppLocalizations.of(context)!.emptyStory),
                   );
                 }
                 if (provider.state == ResultState.error &&
@@ -99,6 +114,14 @@ class HomeScreen extends StatelessWidget {
         child: const Icon(Icons.add),
       ),
     );
+  }
+
+  void openLanguageSettings() {
+    final intent = AndroidIntent(
+      action: 'android.settings.LOCALE_SETTINGS',
+      flags: <int>[Flag.FLAG_ACTIVITY_NEW_TASK],
+    );
+    intent.launch();
   }
 
   ListView _buildList(List<Story> stories) {

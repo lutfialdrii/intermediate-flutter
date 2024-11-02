@@ -37,10 +37,11 @@ class DioService {
 
   Exception _handleError(DioException error) {
     if (error.response != null && error.response!.data is Map) {
-      final message = error.response!.data['message'] ?? 'Terjadi kesalahan';
+      final message =
+          error.response!.data['message'] ?? 'Something went wrong!';
       return Exception(message);
     }
-    return Exception('Terjadi kesalahan jaringan');
+    return Exception('Something went wrong! jaringan');
   }
 
   Future<LoginResponse> login(String email, String password) async {

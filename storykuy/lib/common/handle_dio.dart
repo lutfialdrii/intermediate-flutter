@@ -5,51 +5,51 @@ String handleDioError(DioException error) {
 
   switch (error.type) {
     case DioExceptionType.connectionTimeout:
-      errorMessage = "Koneksi timeout. Coba lagi nanti.";
+      errorMessage = "Connection timeout. Please try again later.";
       break;
     case DioExceptionType.sendTimeout:
-      errorMessage = "Request timeout. Coba lagi nanti.";
+      errorMessage = "Request timeout. Please try again later.";
       break;
     case DioExceptionType.receiveTimeout:
-      errorMessage = "Response timeout. Coba lagi nanti.";
+      errorMessage = "Response timeout. Please try again later.";
       break;
     case DioExceptionType.badResponse:
       if (error.response != null) {
         switch (error.response?.statusCode) {
           case 400:
-            errorMessage = "Bad request. Cek data yang Anda kirim.";
+            errorMessage = "Bad request. Please check the data you sent.";
             break;
           case 401:
-            errorMessage = "Unauthorized. Silakan login ulang.";
+            errorMessage = "Unauthorized. Please log in again.";
             break;
           case 403:
-            errorMessage = "Akses ditolak.";
+            errorMessage = "Access denied.";
             break;
           case 404:
-            errorMessage = "Resource tidak ditemukan.";
+            errorMessage = "Resource not found.";
             break;
           case 500:
-            errorMessage = "Server error. Coba lagi nanti.";
+            errorMessage = "Server error. Please try again later.";
             break;
           default:
             errorMessage =
-                "Terjadi kesalahan: ${error.response?.statusMessage}";
+                "Something went wrong!: ${error.response?.statusMessage}";
         }
       } else {
-        errorMessage = "Terjadi kesalahan tak terduga.";
+        errorMessage = "Something unexpected went wrong!";
       }
       break;
     case DioExceptionType.cancel:
-      errorMessage = "Request dibatalkan.";
+      errorMessage = "Request was canceled.";
       break;
     case DioExceptionType.connectionError:
-      errorMessage = "Tidak ada koneksi internet.";
+      errorMessage = "No internet connection.";
       break;
     case DioExceptionType.badCertificate:
-      errorMessage = "Terjadi Kesalahan";
+      errorMessage = "Something went wrong!";
       break;
     case DioExceptionType.unknown:
-      errorMessage = "Terjadi Kesalahan";
+      errorMessage = "Something went wrong!";
       break;
   }
   return errorMessage;

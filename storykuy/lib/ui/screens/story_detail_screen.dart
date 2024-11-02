@@ -55,7 +55,7 @@ class StoryDetailScreen extends StatelessWidget {
                       const SizedBox(height: 8),
                       // Tanggal dibuat
                       Text(
-                        'Dibuat pada: ${formatDate(story.createdAt!)}',
+                        formatDate(story.createdAt!),
                         style: TextStyle(
                           fontSize: 14,
                           color: Colors.grey[600],

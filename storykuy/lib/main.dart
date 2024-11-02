@@ -7,6 +7,8 @@ import 'package:storykuy/provider/auth_provider.dart';
 import 'package:storykuy/provider/home_provider.dart';
 import 'package:storykuy/router/router_delegate.dart';
 
+import 'common/common.dart';
+
 void main() {
   runApp(const StorykuyApp());
 }
@@ -45,6 +47,8 @@ class _StorykuyAppState extends State<StorykuyApp> {
       ],
       child: MaterialApp(
         title: 'StoryKuy',
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
         theme: ThemeData(
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.green),
           useMaterial3: true,

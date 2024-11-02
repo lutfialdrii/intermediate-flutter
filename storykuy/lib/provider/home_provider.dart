@@ -1,5 +1,4 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
-import 'dart:developer';
 
 import 'package:flutter/foundation.dart';
 import 'package:image_picker/image_picker.dart';
@@ -37,7 +36,7 @@ class HomeProvider extends ChangeNotifier {
   }
 
   Future<void> fetchStories() async {
-    log("fetchstories");
+    // log("fetchstories");
     _state = ResultState.loading;
     notifyListeners();
 
@@ -53,7 +52,7 @@ class HomeProvider extends ChangeNotifier {
     } else {
       _state = ResultState.error;
       notifyListeners();
-      _message = "Gagal terhubung dengan server!";
+      _message = "Failed to connect server!";
     }
   }
 
@@ -100,7 +99,7 @@ class HomeProvider extends ChangeNotifier {
         _message = response.message!;
       } else {
         _uploadState = ResultState.error;
-        _message = response.message ?? "Terjadi Kesalahan!";
+        _message = response.message ?? "Something went wrong!!";
       }
     } catch (e) {
       _uploadState = ResultState.error;

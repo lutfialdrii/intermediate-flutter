@@ -1,6 +1,7 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:storykuy/common/common.dart';
 import 'package:storykuy/common/result_state.dart';
 
 import '../../provider/auth_provider.dart';
@@ -54,7 +55,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                     borderRadius: BorderRadius.circular(8),
                   ),
-                  hintText: "Masukkan Email",
+                  hintText: AppLocalizations.of(context)!.hintEmail,
                   hintStyle: const TextStyle(color: Colors.black45),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(8),
@@ -66,9 +67,9 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
               Visibility(
                 visible: isEmailError,
-                child: const Text(
-                  "Email harus diisi",
-                  style: TextStyle(fontSize: 10, color: Colors.red),
+                child: Text(
+                  AppLocalizations.of(context)!.errorEmail,
+                  style: const TextStyle(fontSize: 10, color: Colors.red),
                 ),
               ),
               const SizedBox(
@@ -86,9 +87,9 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
               Visibility(
                 visible: isPasswordError,
-                child: const Text(
-                  "Password harus diisi",
-                  style: TextStyle(fontSize: 10, color: Colors.red),
+                child: Text(
+                  AppLocalizations.of(context)!.errorPassword,
+                  style: const TextStyle(fontSize: 10, color: Colors.red),
                 ),
               ),
               const SizedBox(
@@ -139,7 +140,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         backgroundColor: Colors.green,
                         shape: const RoundedRectangleBorder(
                             borderRadius:
-                                BorderRadius.all(const Radius.circular(8)))),
+                                BorderRadius.all(Radius.circular(8)))),
                     child: const Padding(
                       padding: EdgeInsets.all(16.0),
                       child: Text(
@@ -160,16 +161,16 @@ class _LoginScreenState extends State<LoginScreen> {
                   alignment: Alignment.center,
                   child: RichText(
                     textAlign: TextAlign.center,
-                    text: const TextSpan(
+                    text: TextSpan(
                       children: [
                         TextSpan(
-                          text: "Belum punya akun? ",
-                          style: TextStyle(
+                          text: AppLocalizations.of(context)!.registerLogin,
+                          style: const TextStyle(
                             color: Colors.black,
                           ),
                         ),
-                        TextSpan(
-                          text: "Register",
+                        const TextSpan(
+                          text: " Register",
                           style: TextStyle(
                             color: Colors.green,
                           ),

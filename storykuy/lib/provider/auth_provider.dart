@@ -33,11 +33,11 @@ class AuthProvider extends ChangeNotifier {
         _loginState = ResultState.error;
       } else {
         _loginState = ResultState.error;
-        _message = "Gagal terhubung dengan server!";
+        _message = "Failed to connect to server!";
       }
     } catch (e) {
       _loginState = ResultState.error;
-      _message = e.toString(); // Simpan pesan error dari Exception
+      _message = e.toString();
     }
     notifyListeners();
   }
@@ -53,7 +53,7 @@ class AuthProvider extends ChangeNotifier {
         _message = response.message!;
       } else {
         _registerState = ResultState.error;
-        _message = response.message ?? "Terjadi Kesalahan!";
+        _message = response.message ?? "Something went wrong!!";
       }
     } catch (e) {
       _registerState = ResultState.error;
@@ -70,10 +70,10 @@ class AuthProvider extends ChangeNotifier {
       final status = await authRepository.clearSession();
       if (status) {
         _logoutState = ResultState.loaded;
-        _message = "Logout Berhasil";
+        _message = "Logout Success";
       } else {
         _logoutState = ResultState.error;
-        _message = "Terjadi Kesalahan";
+        _message = "Something went wrong!";
       }
     } catch (e) {
       _logoutState = ResultState.error;

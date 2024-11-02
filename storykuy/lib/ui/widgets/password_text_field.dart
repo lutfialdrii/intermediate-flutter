@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../common/common.dart';
+
 class PasswordTextField extends StatefulWidget {
   final TextEditingController controller;
   const PasswordTextField({
@@ -28,7 +30,7 @@ class _PasswordTextFieldState extends State<PasswordTextField> {
           ),
           borderRadius: BorderRadius.circular(8),
         ),
-        hintText: "Masukkan Password",
+        hintText: AppLocalizations.of(context)!.hintPassword,
         hintStyle: const TextStyle(color: Colors.black45),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8),
