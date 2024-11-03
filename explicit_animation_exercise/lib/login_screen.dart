@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -7,15 +9,35 @@ class LoginScreen extends StatefulWidget {
   State<LoginScreen> createState() => _LoginScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _LoginScreenState extends State<LoginScreen>
+    with SingleTickerProviderStateMixin {
   final emailController = TextEditingController();
 
   final passwordController = TextEditingController();
 
   final formKey = GlobalKey<FormState>();
 
+  late final AnimationController controller;
+
+  late final Animation<AlignmentGeometry> animation;
+
+  @override
+  void initState() {
+    super.initState();
+
+    controller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 300),
+    );
+    animation = AlignmentTween(
+      begin: Alignment.centerLeft,
+      end: Alignment.centerRight,
+    ).animate(controller);
+  }
+
   @override
   void dispose() {
+    controller.dispose();
     emailController.dispose();
     passwordController.dispose();
     super.dispose();
@@ -64,18 +86,37 @@ class _LoginScreenState extends State<LoginScreen> {
                   },
                 ),
                 const SizedBox(height: 8),
-                ElevatedButton(
-                  onPressed: () async {
-                    if (formKey.currentState!.validate()) {
-                      final email = emailController.text;
-                      final password = passwordController.text;
-                      final text = "Email: $email \nPassword: $password";
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text(text)),
-                      );
-                    }
-                  },
-                  child: const Text("LOGIN"),
+                AlignTransition(
+                  alignment: animation,
+                  child: ElevatedButton(
+                    onHover: (value) {
+                      log("onHover $value");
+                      if (controller.isAnimating) return;
+                      if (!formKey.currentState!.validate()) {
+                        controller.isCompleted
+                            ? controller.reverse()
+                            : controller.forward();
+                      }
+                    },
+                    onPressed: () async {
+                      if (controller.isAnimating) return;
+                      if (!formKey.currentState!.validate()) {
+                        controller.isCompleted
+                            ? controller.reverse()
+                            : controller.forward();
+                      }
+                      if (formKey.currentState!.validate()) {
+                        final email = emailController.text;
+                        final password = passwordController.text;
+                        final text = "Email: $email \nPassword: $password";
+
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text(text)),
+                        );
+                      }
+                    },
+                    child: const Text("LOGIN"),
+                  ),
                 ),
                 const SizedBox(height: 8),
               ],
