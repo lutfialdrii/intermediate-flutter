@@ -21,11 +21,21 @@ class RegisterScreen extends StatefulWidget {
 }
 
 class _RegisterScreenState extends State<RegisterScreen> {
+  final nameController = TextEditingController();
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
 
+  bool isNameError = false;
   bool isEmailError = false;
   bool isPasswordError = false;
+
+  @override
+  void dispose() {
+    nameController.dispose();
+    emailController.dispose();
+    passwordController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -37,6 +47,44 @@ class _RegisterScreenState extends State<RegisterScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Image.asset('assets/ilustration_light.png'),
+              Text(
+                AppLocalizations.of(context)!.name,
+                style: const TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.w700,
+                    color: Colors.green),
+              ),
+              TextField(
+                keyboardType: TextInputType.name,
+                controller: nameController,
+                decoration: InputDecoration(
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: const BorderSide(
+                      width: 1.5,
+                      color: Colors.green,
+                    ),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  hintText: AppLocalizations.of(context)!.hintName,
+                  hintStyle: const TextStyle(color: Colors.black45),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                ),
+                onTapOutside: (event) {
+                  FocusScope.of(context).unfocus();
+                },
+              ),
+              Visibility(
+                visible: isNameError,
+                child: Text(
+                  AppLocalizations.of(context)!.errorName,
+                  style: const TextStyle(fontSize: 10, color: Colors.red),
+                ),
+              ),
+              const SizedBox(
+                height: 12,
+              ),
               const Text(
                 "Email",
                 style: TextStyle(
@@ -55,7 +103,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     ),
                     borderRadius: BorderRadius.circular(8),
                   ),
-
                   hintText: AppLocalizations.of(context)!.hintEmail,
                   hintStyle: const TextStyle(color: Colors.black45),
                   border: OutlineInputBorder(
@@ -96,7 +143,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
               const SizedBox(
                 height: 24,
               ),
-              if (context.watch<AuthProvider>().loginState ==
+              if (context.watch<AuthProvider>().registerState ==
                   ResultState.loading)
                 const Center(
                   child: CircularProgressIndicator(),
@@ -107,10 +154,16 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   child: ElevatedButton(
                     onPressed: () async {
                       if (emailController.text.isEmpty &&
-                          passwordController.text.isEmpty) {
+                          passwordController.text.isEmpty &&
+                          nameController.text.isEmpty) {
                         setState(() {
+                          isNameError = true;
                           isEmailError = true;
                           isPasswordError = true;
+                        });
+                      } else if (nameController.text.isEmpty) {
+                        setState(() {
+                          isNameError = true;
                         });
                       } else if (emailController.text.isEmpty) {
                         setState(() {
@@ -123,7 +176,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       } else {
                         final authRead = context.read<AuthProvider>();
                         await authRead.register(
-                            emailController.text, passwordController.text);
+                          nameController.text,
+                          emailController.text,
+                          passwordController.text,
+                        );
                         if (authRead.registerState == ResultState.loaded) {
                           widget.onLogin();
                           ScaffoldMessenger.of(context).showSnackBar(

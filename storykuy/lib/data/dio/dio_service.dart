@@ -56,11 +56,16 @@ class DioService {
     }
   }
 
-  Future<GeneralResponse> register(String email, String password) async {
+  Future<GeneralResponse> register(
+      String name, String email, String password) async {
     try {
       final response = await _dio.post(
         '/register',
-        data: {"email": email, "password": password},
+        data: {
+          "name": name,
+          "email": email,
+          "password": password,
+        },
       );
       return GeneralResponse.fromJson(response.data);
     } on DioException catch (e) {

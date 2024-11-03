@@ -28,14 +28,15 @@ class AuthRepository {
     }
   }
 
-  Future<GeneralResponse> register(String email, String password) async {
+  Future<GeneralResponse> register(
+      String name, String email, String password) async {
     try {
-      final response = await dioService.register(email, password);
+      final response = await dioService.register(name, email, password);
       return response;
     } on DioException catch (e) {
       throw handleDioError(e);
     } catch (e) {
-      throw "Something went wrong! yang tidak terduga.";
+      rethrow;
     }
   }
 

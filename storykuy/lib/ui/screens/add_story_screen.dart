@@ -26,6 +26,12 @@ class _AddStoryScreenState extends State<AddStoryScreen> {
   var isDescError = false;
 
   @override
+  void dispose() {
+    descriptionController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: true,

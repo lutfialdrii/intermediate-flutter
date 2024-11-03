@@ -42,12 +42,12 @@ class AuthProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> register(String email, String password) async {
+  Future<void> register(String name, String email, String password) async {
     _registerState = ResultState.loading;
     notifyListeners();
 
     try {
-      final response = await authRepository.register(email, password);
+      final response = await authRepository.register(name, email, password);
       if (!response.error!) {
         _registerState = ResultState.loaded;
         _message = response.message!;
