@@ -6,14 +6,14 @@ part of 'asset_response.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-AssetResponse _$AssetResponseFromJson(Map<String, dynamic> json) =>
-    AssetResponse(
+_$AssetResponseImpl _$$AssetResponseImplFromJson(Map<String, dynamic> json) =>
+    _$AssetResponseImpl(
       list: (json['list_quotes'] as List<dynamic>)
           .map((e) => Quote.fromJson(e as Map<String, dynamic>))
           .toList(),
     );
 
-Map<String, dynamic> _$AssetResponseToJson(AssetResponse instance) =>
+Map<String, dynamic> _$$AssetResponseImplToJson(_$AssetResponseImpl instance) =>
     <String, dynamic>{
       'list_quotes': instance.list,
     };

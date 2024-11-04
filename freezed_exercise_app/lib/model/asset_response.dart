@@ -1,22 +1,16 @@
-import 'package:json_annotation/json_annotation.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 import 'quote.dart';
 
 /// todo-03-03: import a dart file to insert generated file
 part 'asset_response.g.dart';
+part 'asset_response.freezed.dart';
 
 /// todo-03-01: add this annotation to indicate Json Serializable class
-@JsonSerializable()
-class AssetResponse {
-  /// todo-03-04: change the default key into teh correct one
-  @JsonKey(name: "list_quotes")
-  final List<Quote> list;
+@freezed
+class AssetResponse with _$AssetResponse {
+  const factory AssetResponse({
+    @JsonKey(name: "list_quotes") required List<Quote> list,
+  }) = _AssetResponse;
 
-  AssetResponse({
-    required this.list,
-  });
-
-  /// todo-03-02: change the [fromJson] and [toJson] methods into this code
   factory AssetResponse.fromJson(json) => _$AssetResponseFromJson(json);
-
-  Map<String, dynamic> toJson() => _$AssetResponseToJson(this);
 }

@@ -6,14 +6,15 @@ part of 'quote.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-Quote _$QuoteFromJson(Map<String, dynamic> json) => Quote(
+_$QuoteImpl _$$QuoteImplFromJson(Map<String, dynamic> json) => _$QuoteImpl(
       id: json['id'] as String,
       en: json['en'] as String,
       author: json['author'] as String,
-      rating: (json['rating'] as num).toDouble(),
+      rating: json['rating'] as String,
     );
 
-Map<String, dynamic> _$QuoteToJson(Quote instance) => <String, dynamic>{
+Map<String, dynamic> _$$QuoteImplToJson(_$QuoteImpl instance) =>
+    <String, dynamic>{
       'id': instance.id,
       'en': instance.en,
       'author': instance.author,

@@ -28,44 +28,87 @@ class _HomeScreenState extends State<HomeScreen> {
       body: Consumer<ApiProvider>(
         builder: (context, value, child) {
           final state = value.quotesState;
-          if (state == LoadingState.loading) {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
-          } else if (state == LoadingState.loaded) {
-            final quotes = value.quotes;
-            return ListView.builder(
-              itemCount: quotes.length,
-              itemBuilder: (context, index) {
-                final quote = quotes[index];
-                return Card(
-                  child: Padding(
-                    padding: const EdgeInsets.all(16),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          quote.en,
-                          style: Theme.of(context).textTheme.titleLarge,
-                        ),
-                        const SizedBox(height: 16),
-                        Text(quote.author),
-                      ],
+          return state.map(
+            loading: (value) {
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            },
+            loaded: (value) {
+              final quotes = value.data;
+              return ListView.builder(
+                itemCount: quotes.length,
+                itemBuilder: (context, index) {
+                  final quote = quotes[index];
+                  return Card(
+                    child: Padding(
+                      padding: const EdgeInsets.all(16),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            quote.en,
+                            style: Theme.of(context).textTheme.titleLarge,
+                          ),
+                          const SizedBox(height: 16),
+                          Text(quote.author),
+                        ],
+                      ),
                     ),
-                  ),
-                );
-              },
-            );
-          } else if (state == LoadingState.error) {
-            final message = value.quotesMessage;
-            return Center(
-              child: Text(message),
-            );
-          } else {
-            return const Center(
-              child: Text("No data"),
-            );
-          }
+                  );
+                },
+              );
+            },
+            error: (value) {
+              final message = value.message;
+              return Center(
+                child: Text(message),
+              );
+            },
+            initial: (value) {
+              return const Center(
+                child: Text("No data"),
+              );
+            },
+          );
+          // if (state == LoadingState.loading) {
+          //   return const Center(
+          //     child: CircularProgressIndicator(),
+          //   );
+          // } else if (state == LoadingState.loaded) {
+          //   final quotes = value.quotes;
+          //   return ListView.builder(
+          //     itemCount: quotes.length,
+          //     itemBuilder: (context, index) {
+          //       final quote = quotes[index];
+          //       return Card(
+          //         child: Padding(
+          //           padding: const EdgeInsets.all(16),
+          //           child: Column(
+          //             crossAxisAlignment: CrossAxisAlignment.start,
+          //             children: [
+          //               Text(
+          //                 quote.en,
+          //                 style: Theme.of(context).textTheme.titleLarge,
+          //               ),
+          //               const SizedBox(height: 16),
+          //               Text(quote.author),
+          //             ],
+          //           ),
+          //         ),
+          //       );
+          //     },
+          //   );
+          // } else if (state == LoadingState.error) {
+          //   final message = value.quotesMessage;
+          //   return Center(
+          //     child: Text(message),
+          //   );
+          // } else {
+          //   return const Center(
+          //     child: Text("No data"),
+          //   );
+          // }
         },
       ),
     );
