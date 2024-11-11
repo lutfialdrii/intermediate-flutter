@@ -23,7 +23,6 @@ class HomeProvider extends ChangeNotifier {
 
   List<Story> stories = [];
 
-
   GeneralResponse? _uploadResponse;
   GeneralResponse? get uploadResponse => _uploadResponse;
 
@@ -37,8 +36,12 @@ class HomeProvider extends ChangeNotifier {
     this.storyRepository,
   );
 
-  Future<void> fetchStories() async {
+  Future<void> fetchStories({refresh = false}) async {
     try {
+      if (refresh) {
+        pageItems = 1;
+        stories = [];
+      }
       if (pageItems == 1) {
         _state = ResultState.loading;
         notifyListeners();

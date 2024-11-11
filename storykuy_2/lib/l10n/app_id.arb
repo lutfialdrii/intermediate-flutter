@@ -17,5 +17,8 @@
     "gallery": "Gallery",
     "desc": "Deskripsi",
     "changeLanguage": "Bahasa",
-    "settings": "Pengaturan"
+    "settings": "Pengaturan",
+    "newStory": "Tambah Story",
+    "storyLocation": "Lokasi Story",
+    "pickYourLocation": "Pilih Lokasi"
 }

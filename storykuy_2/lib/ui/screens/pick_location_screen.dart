@@ -3,6 +3,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
 import 'package:geocoding/geocoding.dart' as geo;
 import 'package:provider/provider.dart';
+import 'package:storykuy/common/common.dart';
 import 'package:storykuy/router/page_manager.dart';
 import '../widgets/placemark_widget.dart';
 
@@ -40,14 +41,14 @@ class _PickLocationScreenState extends State<PickLocationScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Pick your location"),
+        title: Text(AppLocalizations.of(context)!.pickYourLocation),
         actions: [
           IconButton(
             onPressed: () {
               widget.onSetLocation();
               context.read<PageManager>().returnData(latLng);
             },
-            icon: Icon(Icons.check),
+            icon: const Icon(Icons.check),
           )
         ],
       ),
@@ -55,9 +56,9 @@ class _PickLocationScreenState extends State<PickLocationScreen> {
         child: Stack(
           children: [
             GoogleMap(
-              initialCameraPosition: CameraPosition(
+              initialCameraPosition: const CameraPosition(
                 zoom: 18,
-                target: const LatLng(-6.8957473, 107.6337669),
+                target: LatLng(-6.8957473, 107.6337669),
               ),
               markers: markers,
               zoomControlsEnabled: false,
@@ -130,8 +131,8 @@ class _PickLocationScreenState extends State<PickLocationScreen> {
     if (!serviceEnabled) {
       serviceEnabled = await location.requestService();
       if (!serviceEnabled) {
-        ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text("Location services is not available")));
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+            content: Text("Location services is not available")));
         return;
       }
     }
@@ -141,7 +142,7 @@ class _PickLocationScreenState extends State<PickLocationScreen> {
       permissionGranted = await location.requestPermission();
       if (permissionGranted != PermissionStatus.granted) {
         ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text("Location services is denied")));
+            const SnackBar(content: Text("Location services is denied")));
         return;
       }
     }

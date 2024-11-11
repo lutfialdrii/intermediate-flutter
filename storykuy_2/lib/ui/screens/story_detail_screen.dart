@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geocoding/geocoding.dart' as geo;
+import 'package:storykuy/common/common.dart';
 import '../../data/model/get_all_stories_response.dart';
 import '../../helper/util.dart';
 
@@ -107,7 +108,7 @@ class _StoryDetailScreenState extends State<StoryDetailScreen> {
               Container(
                 margin: const EdgeInsets.only(top: 8, bottom: 8),
                 child: Text(
-                  "Story Location",
+                  AppLocalizations.of(context)!.storyLocation,
                   textAlign: TextAlign.center,
                   style: const TextStyle(
                     fontSize: 16,

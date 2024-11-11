@@ -17,5 +17,8 @@
     "gallery": "Gallery",
     "desc": "Description",
     "changeLanguage": "Language",
-    "settings": "Settings"
+    "settings": "Settings",
+    "newStory": "New Story",
+    "storyLocation": "Story Location",
+    "pickYourLocation": "Pick Your Location"
 }

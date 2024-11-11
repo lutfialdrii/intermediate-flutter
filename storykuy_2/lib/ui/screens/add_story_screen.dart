@@ -42,7 +42,7 @@ class _AddStoryScreenState extends State<AddStoryScreen> {
     return Scaffold(
       resizeToAvoidBottomInset: true,
       appBar: AppBar(
-        title: const Text("New Story"),
+        title: Text(AppLocalizations.of(context)!.newStory),
       ),
       body: SafeArea(
         child: SingleChildScrollView(
@@ -176,7 +176,7 @@ class _AddStoryScreenState extends State<AddStoryScreen> {
                     alignment: Alignment.center,
                     margin: const EdgeInsets.only(top: 8, bottom: 8),
                     child: Text(
-                      "Story Location",
+                      AppLocalizations.of(context)!.storyLocation,
                       style: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
@@ -324,7 +324,7 @@ class _AddStoryScreenState extends State<AddStoryScreen> {
     if (provider.uploadState == ResultState.loaded) {
       provider.setImageFile(null);
       provider.setImagePath(null);
-      provider.fetchStories();
+      provider.fetchStories(refresh: true);
       widget.goBackToHome();
     }
   }
