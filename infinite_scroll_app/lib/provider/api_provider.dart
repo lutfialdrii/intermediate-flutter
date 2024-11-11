@@ -32,7 +32,6 @@ class ApiProvider extends ChangeNotifier {
       quotesMessage = "Success";
       quotesError = false;
       quotesState = ApiState.loaded;
-      pageItems = pageItems! + 1;
 
       if (result.list.length < sizeItems) {
         pageItems = null;

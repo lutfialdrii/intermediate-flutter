@@ -20,5 +20,6 @@
     "settings": "Settings",
     "newStory": "New Story",
     "storyLocation": "Story Location",
-    "pickYourLocation": "Pick Your Location"
+    "pickYourLocation": "Pick Your Location",
+    "shareYourLocation": "Share your location?"
 }

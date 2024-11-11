@@ -37,6 +37,7 @@ class HomeProvider extends ChangeNotifier {
   );
 
   Future<void> fetchStories({refresh = false}) async {
+    print("$pageItems");
     try {
       if (refresh) {
         pageItems = 1;
@@ -49,11 +50,9 @@ class HomeProvider extends ChangeNotifier {
 
       final response =
           await storyRepository.fetchStories(pageItems!, sizeItems);
-      if (response.listStory!.isNotEmpty && !response.error!) {
-        // _stories = response.listStory;
+      if (!response.error!) {
         stories.addAll(response.listStory!);
         _state = ResultState.loaded;
-        pageItems = pageItems! + 1;
 
         if (response.listStory!.length < sizeItems) {
           pageItems = null;

@@ -30,6 +30,7 @@ class _AddStoryScreenState extends State<AddStoryScreen> {
   final TextEditingController descriptionController = TextEditingController();
   var isDescError = false;
   LatLng? locationPicked;
+  geo.Placemark? placemark;
 
   @override
   void dispose() {
@@ -160,11 +161,15 @@ class _AddStoryScreenState extends State<AddStoryScreen> {
                     onPressed: () async {
                       final pageManager = context.read<PageManager>();
                       widget.goToPickLocation();
-                      setState(() async {
-                        locationPicked = await pageManager.waitForResult();
+                      final latlng = await pageManager.waitForResult();
+                      placemark = await getPlacemark(latlng);
+
+                      setState(() {
+                        locationPicked = latlng;
                       });
                     },
-                    label: const Text("Share Your Location?"),
+                    label:
+                        Text(AppLocalizations.of(context)!.shareYourLocation),
                     icon: const Icon(Icons.share_location_outlined),
                   ),
                 ),
@@ -185,10 +190,7 @@ class _AddStoryScreenState extends State<AddStoryScreen> {
                     ),
                   ),
                 if (locationPicked != null)
-                  FutureBuilder(
-                    future: showLocation(locationPicked!),
-                    builder: (context, snapshot) => snapshot.data!,
-                  )
+                  PlacemarkWidget(placemark: placemark!)
               ],
             ),
           ),
@@ -232,13 +234,13 @@ class _AddStoryScreenState extends State<AddStoryScreen> {
     );
   }
 
-  Future<PlacemarkWidget> showLocation(LatLng latLng) async {
+  Future<geo.Placemark> getPlacemark(LatLng latLng) async {
     final info =
         await geo.placemarkFromCoordinates(latLng.latitude, latLng.longitude);
 
     final place = info[0];
 
-    return PlacemarkWidget(placemark: place);
+    return place;
   }
 
   _onGalleryView() async {
