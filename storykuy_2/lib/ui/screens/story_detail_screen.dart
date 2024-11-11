@@ -41,6 +41,7 @@ class _StoryDetailScreenState extends State<StoryDetailScreen> {
       appBar: AppBar(
         title: const Text('Story Detail'),
         backgroundColor: Colors.green,
+        foregroundColor: Colors.white,
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -104,7 +105,20 @@ class _StoryDetailScreenState extends State<StoryDetailScreen> {
             ),
             if (widget.story.lat != null && widget.story.lon != null)
               Container(
-                padding: const EdgeInsets.all(16),
+                margin: const EdgeInsets.only(top: 8, bottom: 8),
+                child: Text(
+                  "Story Location",
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black87,
+                  ),
+                ),
+              ),
+            if (widget.story.lat != null && widget.story.lon != null)
+              Container(
+                padding: const EdgeInsets.all(16).copyWith(top: 0),
                 height: 300,
                 width: MediaQuery.of(context).size.width,
                 child: GoogleMap(

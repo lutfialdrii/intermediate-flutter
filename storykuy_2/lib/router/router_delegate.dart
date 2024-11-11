@@ -3,6 +3,7 @@ import 'package:storykuy/data/model/get_all_stories_response.dart';
 import 'package:storykuy/data/repository/auth_repository.dart';
 import 'package:storykuy/ui/screens/add_story_screen.dart';
 import 'package:storykuy/ui/screens/home_screen.dart';
+import 'package:storykuy/ui/screens/pick_location_screen.dart';
 import 'package:storykuy/ui/screens/splash_screen.dart';
 import 'package:storykuy/ui/screens/story_detail_screen.dart';
 
@@ -25,6 +26,7 @@ class MyRouterDelegate extends RouterDelegate
   bool isRegister = false;
   Story? selectedStory;
   bool addStory = false;
+  bool pickLocation = false;
 
   _init() async {
     isLoggedIn = await authRepository.getSession() != null;
@@ -99,8 +101,19 @@ class MyRouterDelegate extends RouterDelegate
                 addStory = false;
                 notifyListeners();
               },
+              goToPickLocation: () {
+                pickLocation = true;
+                notifyListeners();
+              },
             ),
           ),
+        if (pickLocation == true)
+          MaterialPage(child: PickLocationScreen(
+            onSetLocation: () {
+              pickLocation = false;
+              notifyListeners();
+            },
+          ))
       ];
 
   @override
@@ -123,6 +136,11 @@ class MyRouterDelegate extends RouterDelegate
 
         isRegister = false;
         selectedStory = null;
+        if (addStory == true && pickLocation == true) {
+          pickLocation = false;
+          notifyListeners();
+          return true;
+        }
         addStory = false;
         notifyListeners();
 

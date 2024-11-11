@@ -1,20 +1,25 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:io';
-
+import 'package:geocoding/geocoding.dart' as geo;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:storykuy/common/result_state.dart';
 import 'package:storykuy/common/common.dart';
 import 'package:storykuy/provider/home_provider.dart';
+import 'package:storykuy/ui/widgets/placemark_widget.dart';
+
+import '../../router/page_manager.dart';
 
 class AddStoryScreen extends StatefulWidget {
   final Function() goBackToHome;
+  final Function() goToPickLocation;
 
   const AddStoryScreen({
     super.key,
     required this.goBackToHome,
+    required this.goToPickLocation,
   });
 
   @override
@@ -24,6 +29,7 @@ class AddStoryScreen extends StatefulWidget {
 class _AddStoryScreenState extends State<AddStoryScreen> {
   final TextEditingController descriptionController = TextEditingController();
   var isDescError = false;
+  LatLng? locationPicked;
 
   @override
   void dispose() {
@@ -141,51 +147,98 @@ class _AddStoryScreenState extends State<AddStoryScreen> {
                     style: const TextStyle(fontSize: 10, color: Colors.red),
                   ),
                 ),
-                Container(
-                  margin: const EdgeInsets.only(top: 16),
-                  width: double.infinity,
-                  child: ElevatedButton(
-                    onPressed: () async {
-                      if (context.read<HomeProvider>().imagePath == null) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            backgroundColor: Colors.red,
-                            content:
-                                Text(AppLocalizations.of(context)!.errorImage),
-                          ),
-                        );
-                      } else if (descriptionController.text.isEmpty) {
-                        setState(() {
-                          isDescError = true;
-                        });
-                      } else {
-                        _onUpload(descriptionController.text);
-                      }
-                    },
+                const SizedBox(
+                  height: 16,
+                ),
+                Align(
+                  alignment: Alignment.center,
+                  child: ElevatedButton.icon(
                     style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.green,
-                        shape: const RoundedRectangleBorder(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(8)))),
-                    child: Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: context.watch<HomeProvider>().uploadState ==
-                              ResultState.loading
-                          ? const CircularProgressIndicator()
-                          : const Text(
-                              "UPLOAD",
-                              style:
-                                  TextStyle(fontSize: 16, color: Colors.white),
-                            ),
+                      backgroundColor: Colors.green,
+                      foregroundColor: Colors.white,
                     ),
+                    onPressed: () async {
+                      final pageManager = context.read<PageManager>();
+                      widget.goToPickLocation();
+                      setState(() async {
+                        locationPicked = await pageManager.waitForResult();
+                      });
+                    },
+                    label: const Text("Share Your Location?"),
+                    icon: const Icon(Icons.share_location_outlined),
                   ),
                 ),
+                const SizedBox(
+                  height: 16,
+                ),
+                if (locationPicked != null)
+                  Container(
+                    alignment: Alignment.center,
+                    margin: const EdgeInsets.only(top: 8, bottom: 8),
+                    child: Text(
+                      "Story Location",
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black87,
+                      ),
+                    ),
+                  ),
+                if (locationPicked != null)
+                  FutureBuilder(
+                    future: showLocation(locationPicked!),
+                    builder: (context, snapshot) => snapshot.data!,
+                  )
               ],
             ),
           ),
         ),
       ),
+      bottomNavigationBar: Container(
+        margin: const EdgeInsets.all(16),
+        child: ElevatedButton(
+          onPressed: () async {
+            if (context.read<HomeProvider>().imagePath == null) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  backgroundColor: Colors.red,
+                  content: Text(AppLocalizations.of(context)!.errorImage),
+                ),
+              );
+            } else if (descriptionController.text.isEmpty) {
+              setState(() {
+                isDescError = true;
+              });
+            } else {
+              _onUpload(descriptionController.text);
+            }
+          },
+          style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.green,
+              shape: const RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(8)))),
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child:
+                context.watch<HomeProvider>().uploadState == ResultState.loading
+                    ? const CircularProgressIndicator()
+                    : const Text(
+                        "UPLOAD",
+                        style: TextStyle(fontSize: 16, color: Colors.white),
+                      ),
+          ),
+        ),
+      ),
     );
+  }
+
+  Future<PlacemarkWidget> showLocation(LatLng latLng) async {
+    final info =
+        await geo.placemarkFromCoordinates(latLng.latitude, latLng.longitude);
+
+    final place = info[0];
+
+    return PlacemarkWidget(placemark: place);
   }
 
   _onGalleryView() async {
@@ -254,7 +307,17 @@ class _AddStoryScreenState extends State<AddStoryScreen> {
     final bytes = await imageFile.readAsBytes();
 
     final newBytes = await provider.compressImage(bytes);
-    await provider.upload(newBytes, fileName, description);
+    if (locationPicked == null) {
+      await provider.upload(newBytes, fileName, description);
+    } else {
+      await provider.uploadWithLocation(
+        newBytes,
+        fileName,
+        description,
+        locationPicked!.latitude.toString(),
+        locationPicked!.longitude.toString(),
+      );
+    }
 
     ScaffoldMessenger.of(context)
         .showSnackBar(SnackBar(content: Text(provider.message)));

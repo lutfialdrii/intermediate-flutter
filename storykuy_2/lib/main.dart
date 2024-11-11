@@ -5,6 +5,7 @@ import 'package:storykuy/data/repository/auth_repository.dart';
 import 'package:storykuy/data/repository/story_repository.dart';
 import 'package:storykuy/provider/auth_provider.dart';
 import 'package:storykuy/provider/home_provider.dart';
+import 'package:storykuy/router/page_manager.dart';
 import 'package:storykuy/router/router_delegate.dart';
 
 import 'common/common.dart';
@@ -43,6 +44,9 @@ class _StorykuyAppState extends State<StorykuyApp> {
           create: (context) => HomeProvider(StoryRepository(
             dioService: DioService(),
           )),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => PageManager(),
         )
       ],
       child: MaterialApp(

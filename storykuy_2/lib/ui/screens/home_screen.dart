@@ -10,7 +10,7 @@ import '../../common/common.dart';
 import '../../provider/auth_provider.dart';
 import '../widgets/card_story.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   final Function() onLogout;
   final Function(Story) onTapped;
   final Function() onGoToAddScreen;
@@ -23,18 +23,46 @@ class HomeScreen extends StatelessWidget {
   });
 
   @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  final ScrollController scrollController = ScrollController();
+
+  @override
+  void initState() {
+    super.initState();
+    final homeProvider = context.read<HomeProvider>();
+    scrollController.addListener(
+      () {
+        if (scrollController.position.pixels >=
+            scrollController.position.maxScrollExtent) {
+          if (homeProvider.pageItems != null) {
+            homeProvider.fetchStories();
+          }
+        }
+      },
+    );
+    Future.microtask(() async => homeProvider.fetchStories());
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    scrollController.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final authWatch = context.watch<AuthProvider>();
-    final homeWatch = context.watch<HomeProvider>();
 
     Future<void> handleClick(int item) async {
       switch (item) {
         case 0:
           await authWatch.logout();
           if (authWatch.logoutState == ResultState.loaded) {
-            onLogout();
-          } else if (authWatch.logoutState == ResultState.error ||
-              homeWatch.state == ResultState.error) {
+            widget.onLogout();
+          } else if (authWatch.logoutState == ResultState.error) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 content: Text(authWatch.message),
@@ -77,25 +105,39 @@ class HomeScreen extends StatelessWidget {
           children: [
             Consumer<HomeProvider>(
               builder: (context, provider, child) {
-                if (provider.stories.isNotEmpty) {
-                  return _buildList(provider.stories);
-                } else if (provider.stories.isEmpty &&
-                    provider.state == ResultState.loaded) {
+                if (provider.state == ResultState.loading &&
+                    provider.pageItems == 1) {
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+                } else if (provider.state == ResultState.loaded) {
+                  return ListView.builder(
+                    controller: scrollController,
+                    padding: const EdgeInsets.all(8.0),
+                    itemCount: provider.stories.length +
+                        (provider.pageItems != null ? 1 : 0),
+                    itemBuilder: (context, index) {
+                      if (index == provider.stories.length &&
+                          provider.pageItems != null) {
+                        return const Center(
+                          child: Padding(
+                            padding: EdgeInsets.all(8),
+                            child: CircularProgressIndicator(),
+                          ),
+                        );
+                      }
+                      final story = provider.stories[index];
+                      return CardStory(onTapped: widget.onTapped, story: story);
+                    },
+                  );
+                } else {
                   return Center(
                     child: Text(AppLocalizations.of(context)!.emptyStory),
                   );
                 }
-                if (provider.state == ResultState.error &&
-                    provider.message != "") {
-                  return Center(
-                    child: Text(provider.message),
-                  );
-                }
-                return const SizedBox();
               },
             ),
-            if (authWatch.logoutState == ResultState.loading ||
-                homeWatch.state == ResultState.loading)
+            if (authWatch.logoutState == ResultState.loading)
               Container(
                 width: double.infinity,
                 height: double.infinity,
@@ -109,7 +151,7 @@ class HomeScreen extends StatelessWidget {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          onGoToAddScreen();
+          widget.onGoToAddScreen();
         },
         child: const Icon(Icons.add),
       ),
@@ -117,21 +159,10 @@ class HomeScreen extends StatelessWidget {
   }
 
   void openLanguageSettings() {
-    final intent = AndroidIntent(
+    const intent = AndroidIntent(
       action: 'android.settings.LOCALE_SETTINGS',
       flags: <int>[Flag.FLAG_ACTIVITY_NEW_TASK],
     );
     intent.launch();
-  }
-
-  ListView _buildList(List<Story> stories) {
-    return ListView.builder(
-      padding: const EdgeInsets.all(8.0),
-      itemCount: stories.length,
-      itemBuilder: (context, index) {
-        final story = stories[index];
-        return CardStory(onTapped: onTapped, story: story);
-      },
-    );
   }
 }

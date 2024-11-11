@@ -7,9 +7,9 @@ class StoryRepository {
 
   StoryRepository({required this.dioService});
 
-  Future<GetAllStoriesResponse> fetchStories() async {
+  Future<GetAllStoriesResponse> fetchStories([int page = 1, int size = 10]) async {
     try {
-      final response = await dioService.fetchAllStories();
+      final response = await dioService.fetchAllStories(page, size);
       return response;
     } catch (e) {
       rethrow;
@@ -24,6 +24,27 @@ class StoryRepository {
     try {
       final response =
           await dioService.uploadStory(bytes, fileName, description);
+      return response;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<GeneralResponse> uploadStoryWithLocation(
+    List<int> bytes,
+    String fileName,
+    String description,
+    String lat,
+    String lon,
+  ) async {
+    try {
+      final response = await dioService.uploadStoryWithLocation(
+        bytes,
+        fileName,
+        description,
+        lat,
+        lon,
+      );
       return response;
     } catch (e) {
       rethrow;

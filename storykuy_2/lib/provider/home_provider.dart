@@ -21,38 +21,56 @@ class HomeProvider extends ChangeNotifier {
   ResultState _uploadState = ResultState.initial;
   ResultState get uploadState => _uploadState;
 
-  List<Story>? _stories;
-  List<Story> get stories => _stories ?? [];
+  List<Story> stories = [];
+
 
   GeneralResponse? _uploadResponse;
   GeneralResponse? get uploadResponse => _uploadResponse;
 
   String _message = "";
   String get message => _message;
+
+  int? pageItems = 1;
+  int sizeItems = 10;
+
   HomeProvider(
     this.storyRepository,
-  ) {
-    fetchStories();
-  }
+  );
 
   Future<void> fetchStories() async {
-    // log("fetchstories");
-    _state = ResultState.loading;
-    notifyListeners();
+    try {
+      if (pageItems == 1) {
+        _state = ResultState.loading;
+        notifyListeners();
+      }
 
-    final response = await storyRepository.fetchStories();
-    if (response.listStory!.isNotEmpty && !response.error!) {
-      _stories = response.listStory;
-      _state = ResultState.loaded;
-      notifyListeners();
-    } else if (response.error! && response.message != null) {
-      _message = response.message!;
+      final response =
+          await storyRepository.fetchStories(pageItems!, sizeItems);
+      if (response.listStory!.isNotEmpty && !response.error!) {
+        // _stories = response.listStory;
+        stories.addAll(response.listStory!);
+        _state = ResultState.loaded;
+        pageItems = pageItems! + 1;
+
+        if (response.listStory!.length < sizeItems) {
+          pageItems = null;
+        } else {
+          pageItems = pageItems! + 1;
+        }
+        notifyListeners();
+      } else if (response.error! && response.message != null) {
+        _message = response.message!;
+        _state = ResultState.error;
+        notifyListeners();
+      } else {
+        _state = ResultState.error;
+        notifyListeners();
+        _message = "Failed to connect server!";
+      }
+    } catch (e) {
+      _message = e.toString();
       _state = ResultState.error;
       notifyListeners();
-    } else {
-      _state = ResultState.error;
-      notifyListeners();
-      _message = "Failed to connect server!";
     }
   }
 
@@ -93,6 +111,40 @@ class HomeProvider extends ChangeNotifier {
     try {
       final response =
           await storyRepository.uploadStory(bytes, fileName, description);
+      if (!response.error!) {
+        _uploadState = ResultState.loaded;
+        _uploadResponse = uploadResponse;
+        _message = response.message!;
+      } else {
+        _uploadState = ResultState.error;
+        _message = response.message ?? "Something went wrong!!";
+      }
+    } catch (e) {
+      _uploadState = ResultState.error;
+      _message = e.toString();
+    }
+    notifyListeners();
+  }
+
+  Future<void> uploadWithLocation(
+    List<int> bytes,
+    String fileName,
+    String description,
+    String latitude,
+    String longitude,
+  ) async {
+    _message = "";
+    _uploadResponse = null;
+    _uploadState = ResultState.loading;
+    notifyListeners();
+    try {
+      final response = await storyRepository.uploadStoryWithLocation(
+        bytes,
+        fileName,
+        description,
+        latitude,
+        longitude,
+      );
       if (!response.error!) {
         _uploadState = ResultState.loaded;
         _uploadResponse = uploadResponse;

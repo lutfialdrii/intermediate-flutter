@@ -41,7 +41,7 @@ class DioService {
           error.response!.data['message'] ?? 'Something went wrong!';
       return Exception(message);
     }
-    return Exception('Something went wrong! jaringan');
+    return Exception('Something went wrong!');
   }
 
   Future<LoginResponse> login(String email, String password) async {
@@ -73,9 +73,12 @@ class DioService {
     }
   }
 
-  Future<GetAllStoriesResponse> fetchAllStories() async {
+  Future<GetAllStoriesResponse> fetchAllStories([int page = 1, int size = 10]) async {
     try {
-      final response = await _dio.get('/stories');
+      final response = await _dio.get('/stories', queryParameters: {
+        "page" : page,
+        "size" : size,
+      });
       return GetAllStoriesResponse.fromJson(response.data);
     } on DioException catch (e) {
       throw _handleError(e);
@@ -93,6 +96,35 @@ class DioService {
       FormData formData = FormData.fromMap({
         "description": description,
         "photo": multiPartFile,
+      });
+      final response = await _dio.post(
+        '/stories',
+        data: formData,
+        options: Options(
+          headers: {"Content-Type": "multipart/form-data"},
+        ),
+      );
+      return GeneralResponse.fromJson(response.data);
+    } on DioException catch (e) {
+      throw _handleError(e);
+    }
+  }
+
+  Future<GeneralResponse> uploadStoryWithLocation(
+    List<int> bytes,
+    String fileName,
+    String description,
+    String latitude,
+    String longitude,
+  ) async {
+    try {
+      final multiPartFile = MultipartFile.fromBytes(bytes,
+          filename: fileName, contentType: DioMediaType.parse('image/jpeg'));
+      FormData formData = FormData.fromMap({
+        "description": description,
+        "photo": multiPartFile,
+        "lat": latitude,
+        "lon": longitude,
       });
       final response = await _dio.post(
         '/stories',
